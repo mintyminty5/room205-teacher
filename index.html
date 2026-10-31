@@ -127,7 +127,7 @@ button{font-family:var(--ui);cursor:pointer;border:0}
 .chat.insta .hd{border-bottom:1px solid #2a2a2a}
 .chat .hd small{font-weight:400;font-size:12px;color:#3f4b58}
 .chat.insta .hd small{color:#999}
-.chat .body{padding:14px 12px}
+.chat .body{padding:14px 12px 26px;max-height:62vh;overflow-y:auto;scroll-behavior:smooth}
 .day{text-align:center;font-size:11px;color:#3f4b58;margin:10px 0 8px}
 .day span{background:rgba(0,0,0,.12);padding:3px 10px;border-radius:999px}
 .chat.insta .day{color:#888}.chat.insta .day span{background:rgba(255,255,255,.1)}
@@ -584,12 +584,16 @@ function r2updateLead() {
 }
 function r2renderChat() {
   const b = document.getElementById('r2chatbody'); if (!b) return; b.innerHTML = '';
+  const items = [];
   r2Chat.forEach(x => {
-    if (x.day) { b.insertAdjacentHTML('beforeend', `<div class="day"><span>${x.day}</span></div>`); return; }
-    if (x.lagonly) { b.insertAdjacentHTML('beforeend', `<span class="lag slow"><em>${x.lagonly}</em></span>`); return; }
-    if (x.me) b.insertAdjacentHTML('beforeend', `<div class="m me"><div class="meta">${x.t}</div><div class="bub">${x.me}</div></div>`);
-    if (x.her) b.insertAdjacentHTML('beforeend', `<div class="m o"><div class="avatar">🌱</div><div class="bub">${x.her}</div><div class="meta">${x.t}</div></div><span class="lag ${x.slow?'slow':''}"><em>답장까지 ${x.lag}</em></span>`);
+    if (x.day) items.push(`<div class="day"><span>${x.day}</span></div>`);
+    else if (x.lagonly) items.push(`<span class="lag slow"><em>${x.lagonly}</em></span>`);
+    else if (x.me) items.push(`<div class="m me"><div class="meta">${x.t}</div><div class="bub">${x.me}</div></div>`);
+    else if (x.her) items.push(`<div class="m o"><div class="avatar">🌱</div><div class="bub">${x.her}</div><div class="meta">${x.t}</div></div><span class="lag ${x.slow?'slow':''}"><em>답장까지 ${x.lag}</em></span>`);
   });
+  let i = 0;
+  const reveal = () => { if (i >= items.length) return; b.insertAdjacentHTML('beforeend', items[i++]); b.scrollTop = b.scrollHeight; if (i < items.length) setTimeout(reveal, 520); };
+  reveal();
 }
 let r2tries = 0;
 const r2hints = ['보내지 않았다. 하연이의 답장이 언제부터 느려졌는지 다시 봐.','4월 3일. 내가 "웃기다"고 한 것 안에 있다.','하연이는 "웃긴 게 아니라 다른 건데"라고 썼다. 민서는 "걔한텐 그냥 말하는 방식"이라고 했다. 두 글자.'];
