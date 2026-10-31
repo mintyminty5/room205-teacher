@@ -890,11 +890,11 @@ function r4updateLead() {
 }
 function r4renderGrid() {
   const g = document.getElementById('r4grid'); if (!g) return; g.innerHTML = '';
-  r4Posts.forEach((p, i) => g.insertAdjacentHTML('beforeend', `<button class="post" style="background:${p.bg}" onclick="r4showPost(${i})">${p.e}<small>${p.d}</small></button>`));
+  r4Posts.forEach((p, i) => g.insertAdjacentHTML('beforeend', `<button class="post" style="background:${p.bg}" onclick="r4showPost(${i})"><img src="${p.img}" alt="소연이의 일상 사진"><small>${p.d}</small></button>`));
 }
 function r4showPost(i) {
   const p = r4Posts[i];
-  document.getElementById('r4detail').innerHTML = `<div class="cap">${p.e} ${p.cap}</div><div class="meta">게시: <b>${p.d}</b> · 위치 태그: <b>${p.ok?p.loc:'학교 급식실'}</b><br>사진 정보 — 촬영 시각: <b>${p.shot}</b> · 촬영 위치: <b class="${p.ok?'':'warn'}">${p.loc}</b>${p.ok?'':' · <span class="warn">사진 속 인물 1명</span>'}</div>`;
+  document.getElementById('r4detail').innerHTML = `<img class="detail-photo" src="${p.img}" alt="소연이의 게시물 사진"><div class="cap">${p.cap}</div><div class="meta">게시: <b>${p.d}</b> · 위치 태그: <b>${p.ok?p.loc:'학교 급식실'}</b><br>사진 정보 — 촬영 시각: <b>${p.shot}</b> · 촬영 위치: <b class="${p.ok?'':'warn'}">${p.loc}</b>${p.ok?'':' · <span class="warn">사진 속 인물 1명</span>'}</div>`;
 }
 let r4tries = 0;
 const r4hints = ['복구 실패. 스토리 보관함에서 3초 만에 지운 날을 찾아.','급식실이라고 태그했는데 사진은 밤 11시 56분에 집에서 찍힌 날.','4월 12일. 월 두 자리, 일 두 자리.'];
