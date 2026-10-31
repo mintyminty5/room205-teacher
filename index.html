@@ -733,12 +733,34 @@ function r3updateLead() {
 }
 function r3renderChat() {
   const b = document.getElementById('r3chatbody'); if (!b) return; b.innerHTML = '';
+  const items = [];
   r3Chat.forEach(x => {
-    if (x.day) { b.insertAdjacentHTML('beforeend', `<div class="day"><span>${x.day}</span></div>`); return; }
-    if (x.me) { b.insertAdjacentHTML('beforeend', `<div class="m me"><div class="meta">${x.t}</div><div class="bub">${x.me}</div></div>`); return; }
-    const nm = x.o;
-    b.insertAdjacentHTML('beforeend', `<div class="nm">${nm}</div><div class="m o"><div class="avatar">${x.ic}</div><div class="bub ${x.del?'del':''}">${x.del?'삭제된 메시지입니다.':x.x}</div><div class="meta">${x.t}</div></div>`);
+    if (x.day) items.push({type:'day', html:`<div class="day"><span>${x.day}</span></div>`});
+    else if (x.me) items.push({type:'me', html:`<div class="m me"><div class="meta">${x.t}</div><div class="bub">${x.me}</div></div>`});
+    else items.push({type:'other', html:`<div class="nm">${x.o}</div><div class="m o"><div class="avatar">${x.ic}</div><div class="bub ${x.del?'del':''}">${x.del?'삭제된 메시지입니다.':x.x}</div><div class="meta">${x.t}</div></div>`});
   });
+  let i = 0;
+  const reveal = () => {
+    if (i >= items.length) return;
+    const item = items[i++];
+    if (item.type === 'day') {
+      b.insertAdjacentHTML('beforeend', item.html);
+      b.scrollTop = b.scrollHeight;
+      setTimeout(reveal, 380);
+      return;
+    }
+    const typing = document.createElement('div');
+    typing.className = 'm o';
+    typing.innerHTML = `<div class="avatar">${item.type === 'me' ? '🙂' : '🍃'}</div><div class="bub">•••</div>`;
+    b.appendChild(typing);
+    b.scrollTop = b.scrollHeight;
+    setTimeout(() => {
+      typing.outerHTML = item.html;
+      b.scrollTop = b.scrollHeight;
+      setTimeout(reveal, item.type === 'other' ? 620 : 460);
+    }, 700);
+  };
+  reveal();
 }
 let r3tries = 0;
 const r3hints = ['열리지 않는다. "처음" 말하려던 때다.','단톡방의 첫 삭제 메시지와 버전 기록의 첫 수정. 같은 시각이다.','11월 18일 밤. 시와 분, 네 자리.'];
